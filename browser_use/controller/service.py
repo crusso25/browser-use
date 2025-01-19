@@ -510,7 +510,7 @@ class Controller:
 			if results[-1].is_done or results[-1].error or i == len(actions) - 1:
 				break
 
-			await asyncio.sleep(browser_context.config.wait_between_actions)
+			await asyncio.sleep(0.5)
 			# hash all elements. if it is a subset of cached_state its fine - else break (new elements on page)
 
 		return results

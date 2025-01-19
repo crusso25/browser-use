@@ -490,7 +490,7 @@ class Agent:
 		history: AgentHistoryList,
 		max_retries: int = 3,
 		skip_failures: bool = True,
-		delay_between_actions: float = 2.0,
+		delay_between_actions: float = 1.0,
 	) -> list[ActionResult]:
 		"""
 		Rerun a saved history of actions with error handling and retry logic.
