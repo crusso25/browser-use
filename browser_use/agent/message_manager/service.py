@@ -89,7 +89,7 @@ class MessageManager:
 		task_message = self.task_instructions(task)
 		self._add_message_with_tokens(task_message)
 
-	async def wait_for_new_post(self, check_interval: int = 60) -> None:
+	async def wait_for_new_post(self, check_interval: int = 10) -> None:
 		"""Wait for a new post to be detected."""
 		while not self._is_new_post_detected():
 			await asyncio.sleep(check_interval)
