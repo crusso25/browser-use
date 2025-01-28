@@ -45,3 +45,4 @@ class ScrollAction(BaseModel):
 
 class SendKeysAction(BaseModel):
 	keys: str
+

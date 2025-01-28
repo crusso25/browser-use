@@ -1,6 +1,7 @@
 import asyncio
 import logging
 import json
+import requests
 
 from main_content_extractor import MainContentExtractor
 from playwright.async_api import Page
@@ -21,8 +22,15 @@ from browser_use.controller.views import (
 	SwitchTabAction,
 )
 from browser_use.utils import time_execution_async, time_execution_sync
+from pydantic import BaseModel
+import os
+
+class SavePostContentAction(BaseModel):
+	post_data: dict
 
 logger = logging.getLogger(__name__)
+
+
 
 
 class Controller:
@@ -110,12 +118,59 @@ class Controller:
 					f'Element no longer available with index {params.index} - most likely the page changed'
 				)
 				return ActionResult(error=str(e))
-
 		@self.registry.action(
-			'Input text into a input interactive element',
-			param_model=InputTextAction,
-			requires_browser=True,
+			description='Save new post contents into a local pipeline',
+			param_model=SavePostContentAction,
+			requires_browser=False
 		)
+		def save_post_content(params: SavePostContentAction) -> ActionResult:
+			file_path = r'C:\Maximillion\trading-dashbord\public\pipeline_data.json'
+			try:
+				# Step 1 & 2: Read existing data if file exists
+				data = []
+				if os.path.exists(file_path) and os.path.getsize(file_path) > 0:
+					with open(file_path, 'r') as f:
+						try:
+							data = json.load(f)
+							if not isinstance(data, list):
+								data = []
+						except json.JSONDecodeError:
+							data = []
+
+				# Step 3: Append the new post data
+				data.append(params.post_data)
+
+				# Step 4: Write the entire list back to the file as valid JSON
+				with open(file_path, 'w') as f:
+					json.dump(data, f, indent=4)
+
+				# Extract the ticker (if present) for the HTTP request
+				ticker_value = params.post_data.get('ticker', '')
+				content = params.post_data.get('content', '')
+				msg = '✅ New post content saved to local pipeline.'
+
+				# if ticker_value:
+				# 	# Make the POST request to your local Flask API
+				# 	try:
+				# 		response = requests.post(
+				# 			'http://127.0.0.1:5000/analyze',
+				# 			json={'tickers': ticker_value, 'insider_message': content}
+				# 		)
+				# 		# Optional: You can include the server's response in your log/message
+				# 		if response.ok:
+				# 			msg += f' Server response: {response.text}'
+				# 		else:
+				# 			msg += f' Server error: {response.status_code} - {response.text}'
+				# 	except requests.RequestException as e:
+				# 		msg += f' [Error when calling local API: {str(e)}]'
+
+				# logger.info(msg)
+				# return ActionResult(extracted_content=msg, include_in_memory=True)
+
+			except Exception as e:
+				error_msg = f'Failed to save post content: {str(e)}'
+				logger.error(error_msg)
+				return ActionResult(error=error_msg)
 		async def input_text(params: InputTextAction, browser: BrowserContext):
 			session = await browser.get_session()
 			state = session.cached_state
@@ -536,3 +591,4 @@ class Controller:
 			return ActionResult()
 		except Exception as e:
 			raise e
+		

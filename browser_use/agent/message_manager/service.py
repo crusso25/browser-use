@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import logging
-import asyncio
 from datetime import datetime
 from typing import List, Optional, Type
 
@@ -89,15 +88,7 @@ class MessageManager:
 		task_message = self.task_instructions(task)
 		self._add_message_with_tokens(task_message)
 
-	async def wait_for_new_post(self, check_interval: int = 10) -> None:
-		"""Wait for a new post to be detected."""
-		while not self._is_new_post_detected():
-			await asyncio.sleep(check_interval)
-
-	def _is_new_post_detected(self) -> bool:
-		"""Check if a new post is detected. This is a placeholder for actual implementation."""
-		# Implement the logic to detect a new post
-		return False
+	@staticmethod
 	def task_instructions(task: str) -> HumanMessage:
 		content = f'Your ultimate task is: {task}. If you achieved your ultimate task, stop everything and use the done action in the next step to complete the task. If not, continue as usual.'
 		return HumanMessage(content=content)
