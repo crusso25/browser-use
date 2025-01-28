@@ -19,7 +19,6 @@ from langchain_core.messages import (
 	BaseMessage,
 	SystemMessage,
 )
-from lmnr import observe
 from openai import RateLimitError
 from PIL import Image, ImageDraw, ImageFont
 from pydantic import BaseModel, ValidationError
@@ -454,7 +453,6 @@ class Agent:
 			)
 		)
 
-	@observe(name='agent.run')
 	async def run(self, max_steps: int = 100) -> AgentHistoryList:
 		"""Execute the task with maximum number of steps"""
 		try:

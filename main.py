@@ -17,7 +17,7 @@ async def main():
     my_browser = Browser(config=config)
     agent = Agent(
         task = """
-Navigate to https://optionshawk.com/optionshawk-trading-hub/, stay on this webpage, and process all posts within the time frame starting from 1/27/2025 at 16:00 to the beginning of posts on 1/14/2025. For each post within this time frame that mentions the CRM ticker, perform the following steps:
+Navigate to https://optionshawk.com/optionshawk-trading-hub/, stay on this webpage, and process all posts within the time frame starting from 1/28/2025 at 15:55 to 16:00. For each post within this time frame, perform the following steps:
 
 1. Save the content of the post using the `save_post_content` function in the JSON format provided below:
 
