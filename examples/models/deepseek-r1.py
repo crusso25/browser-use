@@ -17,19 +17,15 @@ if not api_key:
 
 async def run_search():
 	agent = Agent(
-		task=(
-			'1. Go to https://www.reddit.com/r/LocalLLaMA '
-			"2. Search for 'browser use' in the search bar"
-			'3. Click on first result'
-			'4. Return the first comment'
-		),
+		task=('go to amazon.com, search for laptop, sort by best rating, and give me the price of the first result'),
 		llm=ChatOpenAI(
 			base_url='https://api.deepseek.com/v1',
-			model='deepseek-chat',
+			model='deepseek-reasoner',
 			api_key=SecretStr(api_key),
 		),
-		tool_call_in_content=True,
 		use_vision=False,
+		max_failures=2,
+		max_actions_per_step=1,
 	)
 
 	await agent.run()

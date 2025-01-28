@@ -178,3 +178,7 @@ cv_04_24.pdf
 AgentHistoryList.json
 *.gif
 .aider*
+
+gcp-login.json
+.vscode
+.ruff_cache
